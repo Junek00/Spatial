@@ -17,3 +17,7 @@
 - **Why**: Allows swapping the entire app's look and feel by changing `data-theme` on the body.
 
 Follow these rules rigidly during any code modification or refactoring.
+
+## 5. Commit Messages
+- **Rule**: All commit messages must be written in a bilingual format: English subject line, followed by a blank line, and then the Korean translation as the body.
+- **Why**: Ensures global readability while maintaining clarity for Korean contributors.
