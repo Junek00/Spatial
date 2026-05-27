@@ -273,7 +273,10 @@ You have live web access. For this note type, include 1–2 real source citation
   }
 
   // Extract clickable source links from response annotations (OpenRouter/OpenAI only)
-  const annotations = result_raw.annotations ?? []
+  // Both OpenRouter :online and OpenAI search-preview return citations as
+  // annotations on the message object — not inside the JSON content itself.
+  const annotations: Array<{ type: string; url_citation?: { url: string; title?: string } }> =
+    (result_raw as any).annotations ?? []
   const seen = new Set<string>()
   const sources = annotations
     .filter(a => a.type === "url_citation" && a.url_citation?.url)
