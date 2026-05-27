@@ -179,13 +179,13 @@ export function ProjectSidebar({
   return (
     <div
       style={{
-        width: isOpen ? (showSettings ? 320 : 240) : 0,
+        width: isOpen ? 240 : 0,
         opacity: isOpen ? 1 : 0,
         visibility: isOpen ? "visible" : "hidden"
       }}
       className="relative z-50 transition-all duration-200 ease-in-out overflow-hidden border-r border-border bg-sidebar backdrop-blur-3xl flex flex-col h-full"
     >
-      <div style={{ width: showSettings ? 320 : 240 }} className="flex flex-col h-full">
+      <div className="flex flex-col h-full w-[240px]">
         {/* Header */}
         <div className="flex h-10 items-center justify-between border-b border-border bg-card/80 backdrop-blur-md px-3 py-1.5 shrink-0">
           <div className="flex items-center gap-2.5">
