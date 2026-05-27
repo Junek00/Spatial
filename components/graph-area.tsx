@@ -22,9 +22,11 @@ interface SimLink extends d3.SimulationLinkDatum<SimNode> {
   isSynthesisLink?: boolean
 }
 
+import type { GhostNote } from "@/lib/types"
+
 interface GraphAreaProps {
   blocks: TextBlock[]
-  ghostNote?: { id: string; text: string; category: string; isGenerating: boolean }
+  ghostNote?: GhostNote
   projectName: string
   onReEnrich:       (id: string) => void
   onChangeType:     (id: string, newType: import("@/lib/content-types").ContentType) => void

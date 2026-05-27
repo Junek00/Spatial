@@ -247,6 +247,67 @@ export function getModelsForProvider(provider: AIProvider): AIModel[] {
 export const DEFAULT_MODEL_ID = "openai/gpt-4o"
 export const DEFAULT_PROVIDER: AIProvider = "openrouter"
 
+// ── Dynamic model fetching ────────────────────────────────────────────────────
+
+export interface FetchedModel {
+  id: string
+  name?: string
+  description?: string
+  owned_by?: string
+  isFree?: boolean
+  contextLength?: number
+}
+
+export async function fetchModelsFromProvider(
+  provider: AIProvider,
+  apiKey: string,
+  customBaseUrl?: string,
+): Promise<FetchedModel[]> {
+  // If provider is inception, they might not support /models or we just want to return Mercury
+  if (provider === "inception") {
+    return [{
+      id: "mercury-2",
+      name: "Mercury 2",
+      description: "Inception Labs — 무료 10M 토큰 (디퓨전 기반 超고속 모델)",
+      isFree: true
+    }]
+  }
+
+  const baseUrl = customBaseUrl?.trim() || getPreset(provider).baseUrl
+  const headers: Record<string, string> = {
+    "Authorization": `Bearer ${apiKey}`,
+  }
+  if (provider === "openrouter") {
+    headers["HTTP-Referer"] = "https://nodepad.space"
+    headers["X-Title"] = "nodepad"
+  }
+  const res = await fetch(`${baseUrl}/models`, { headers })
+  if (!res.ok) throw new Error(`Failed to fetch models (${res.status})`)
+  const data = await res.json()
+  const items: Array<{
+    id: string
+    name?: string
+    description?: string
+    owned_by?: string
+    pricing?: { prompt?: string; completion?: string }
+    context_length?: number
+  }> = data?.data ?? []
+  return items.map(m => {
+    const isFree = m.pricing
+      ? (m.pricing.prompt === "0" || m.pricing.prompt === "0.0") &&
+        (m.pricing.completion === "0" || m.pricing.completion === "0.0")
+      : false
+    return {
+      id: m.id,
+      name: m.name,
+      description: m.description,
+      owned_by: m.owned_by,
+      isFree,
+      contextLength: m.context_length,
+    }
+  })
+}
+
 export interface AISettings {
   apiKey: string
   modelId: string

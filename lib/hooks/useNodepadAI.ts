@@ -168,7 +168,7 @@ export function useNodepadAI() {
                   if (existingTaskIndex !== -1) {
                     const existingTask = proj.blocks[existingTaskIndex]
                     const isDuplicate = existingTask.subTasks?.some(
-                      st => st.text.trim() === text.trim()
+                      (st: any) => st.text.trim() === text.trim()
                     )
                     if (isDuplicate) {
                       return { ...proj, blocks: proj.blocks.filter(b => b.id !== id) }

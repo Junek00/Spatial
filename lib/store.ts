@@ -15,6 +15,8 @@ interface NodepadState {
   addProject: (project: Project) => void
   deleteProject: (id: string) => void
   renameProject: (id: string, name: string) => void
+  moveBlockToProject: (blockId: string, fromProjectId: string, toProjectId: string) => void
+  copyBlockToProject: (blockId: string, fromProjectId: string, toProjectId: string) => void
   pushHistory: (projectId: string, blocks: TextBlock[]) => void
   popHistory: (projectId: string) => TextBlock[] | null
   blockHistory: Record<string, TextBlock[][]>
@@ -57,6 +59,49 @@ export const useStore = create<NodepadState>()(
       renameProject: (id, name) => set((state) => ({
         projects: state.projects.map((p) => p.id === id ? { ...p, name } : p)
       })),
+
+      moveBlockToProject: (blockId, fromProjectId, toProjectId) => set((state) => {
+        if (fromProjectId === toProjectId) return state
+        
+        let blockToMove = null
+        const fromProject = state.projects.find(p => p.id === fromProjectId)
+        if (fromProject) {
+          blockToMove = fromProject.blocks.find(b => b.id === blockId)
+        }
+        if (!blockToMove) return state
+
+        return {
+          projects: state.projects.map(p => {
+            if (p.id === fromProjectId) {
+              return { ...p, blocks: p.blocks.filter(b => b.id !== blockId) }
+            }
+            if (p.id === toProjectId) {
+              return { ...p, blocks: [...p.blocks, blockToMove] }
+            }
+            return p
+          })
+        }
+      }),
+
+      copyBlockToProject: (blockId, fromProjectId, toProjectId) => set((state) => {
+        let blockToCopy = null
+        const fromProject = state.projects.find(p => p.id === fromProjectId)
+        if (fromProject) {
+          blockToCopy = fromProject.blocks.find(b => b.id === blockId)
+        }
+        if (!blockToCopy) return state
+
+        const newBlock = { ...blockToCopy, id: crypto.randomUUID() }
+
+        return {
+          projects: state.projects.map(p => {
+            if (p.id === toProjectId) {
+              return { ...p, blocks: [...p.blocks, newBlock] }
+            }
+            return p
+          })
+        }
+      }),
 
       pushHistory: (projectId, blocks) => set((state) => {
         const history = state.blockHistory[projectId] || []

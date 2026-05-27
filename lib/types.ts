@@ -1,4 +1,5 @@
 import type { TextBlock } from "@/components/tile-card"
+export type { TextBlock }
 
 export interface GhostNote {
   id: string

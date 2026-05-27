@@ -2,11 +2,12 @@
 
 import { useState, useRef, useEffect, useCallback, useMemo, memo } from "react"
 import { createPortal } from "react-dom"
-import { X, Check, Pin, RefreshCw, ChevronDown, ChevronRight, ChevronLeft, Link as LinkIcon, Sparkles, Tag } from "lucide-react"
+import { X, Check, Pin, RefreshCw, ChevronDown, ChevronRight, ChevronLeft, Link as LinkIcon, Sparkles, Tag, FolderInput, ArrowRightFromLine, Copy } from "lucide-react"
 import { motion } from "framer-motion"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { CONTENT_TYPE_CONFIG, type ContentType } from "@/lib/content-types"
+import { useStore } from "@/lib/store"
 
 export interface TextBlock {
   id: string
@@ -116,6 +117,11 @@ export const TileCard = memo(function TileCard({
   const [pickerRect, setPickerRect] = useState<DOMRect | null>(null)
   const typeChangeButtonRef = useRef<HTMLButtonElement>(null)
   const typePickerDropdownRef = useRef<HTMLDivElement>(null)
+  const [isMoveMenuOpen, setIsMoveMenuOpen] = useState(false)
+  const [moveMenuRect, setMoveMenuRect] = useState<DOMRect | null>(null)
+  const moveMenuButtonRef = useRef<HTMLButtonElement>(null)
+  const moveMenuDropdownRef = useRef<HTMLDivElement>(null)
+  const [workspaces, setWorkspaces] = useState<{id: string, name: string}[]>([])
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const annotationRef = useRef<HTMLTextAreaElement>(null)
   const footerRef = useRef<HTMLDivElement>(null)
@@ -183,6 +189,27 @@ export const TileCard = memo(function TileCard({
     }
   }, [isTypePickerOpen])
 
+  // Same outside-click / Escape behavior for the move-to-workspace dropdown
+  useEffect(() => {
+    if (!isMoveMenuOpen) return
+    const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") setIsMoveMenuOpen(false) }
+    const handleMouseDown = (e: MouseEvent) => {
+      const t = e.target as Node
+      if (
+        !moveMenuButtonRef.current?.contains(t) &&
+        !moveMenuDropdownRef.current?.contains(t)
+      ) {
+        setIsMoveMenuOpen(false)
+      }
+    }
+    window.addEventListener("keydown", handleKey)
+    document.addEventListener("mousedown", handleMouseDown)
+    return () => {
+      window.removeEventListener("keydown", handleKey)
+      document.removeEventListener("mousedown", handleMouseDown)
+    }
+  }, [isMoveMenuOpen])
+
   const handleSave = useCallback(() => {
     if (editText.trim() && editText !== block.text) {
       onEdit(block.id, editText)
@@ -229,6 +256,9 @@ export const TileCard = memo(function TileCard({
 
   const handleDoubleClick = useCallback((e: React.MouseEvent) => {
     if (effectiveCollapsed) return
+    // Already editing — let the native double-click select a word in the
+    // textarea instead of bubbling up and resetting our edit buffer.
+    if (isEditing || isEditingAnnotation) return
     const target = e.target as HTMLElement
     if (target.closest('a')) return
     // Capture current height before any state changes to prevent shrink during editing
@@ -240,7 +270,7 @@ export const TileCard = memo(function TileCard({
     }
     setEditText(block.text)
     setIsEditing(true)
-  }, [block.text, block.annotation, effectiveCollapsed])
+  }, [block.text, block.annotation, effectiveCollapsed, isEditing, isEditingAnnotation])
 
   const isTextRTL = useMemo(() => isRTL(block.text), [block.text])
   const isAnnotationRTL = useMemo(() => isRTL(block.annotation || ""), [block.annotation])
@@ -402,6 +432,26 @@ export const TileCard = memo(function TileCard({
               <Pin className={`h-2.5 w-2.5 transition-transform ${block.isPinned ? "fill-current" : "-rotate-45"}`} />
             </button>
           )}
+          {/* Move/Copy to another workspace — portal dropdown */}
+          {!effectiveCollapsed && (
+            <button
+              ref={moveMenuButtonRef}
+              onClick={e => {
+                e.stopPropagation()
+                const storeState = useStore.getState()
+                setWorkspaces(storeState.projects.map(p => ({ id: p.id, name: p.name })))
+                if (moveMenuButtonRef.current) {
+                  setMoveMenuRect(moveMenuButtonRef.current.getBoundingClientRect())
+                }
+                setIsMoveMenuOpen(v => !v)
+              }}
+              className={`flex h-4 w-4 items-center justify-center rounded-sm transition-all ${isMoveMenuOpen ? "bg-black/20 opacity-100" : "opacity-40 hover:opacity-100 hover:bg-black/10"}`}
+              title="Move or copy to another space"
+              aria-label="Move or copy to another space"
+            >
+              <FolderInput className="h-2.5 w-2.5" />
+            </button>
+          )}
           {/* Change-type button — portal dropdown, clear of tile overflow:hidden */}
           {onChangeType && !effectiveCollapsed && (
             <button
@@ -474,6 +524,67 @@ export const TileCard = memo(function TileCard({
                   </button>
                 )
               })}
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Move/Copy menu — rendered via portal so it escapes tile overflow:hidden */}
+      {isMoveMenuOpen && moveMenuRect && isMounted && createPortal(
+        <div
+          ref={moveMenuDropdownRef}
+          className="rounded-md border border-border bg-card shadow-xl"
+          style={{
+            position: "fixed",
+            top: moveMenuRect.bottom + 4,
+            right: window.innerWidth - moveMenuRect.right,
+            minWidth: 240,
+            maxWidth: 320,
+            zIndex: 9999,
+          }}
+          onMouseDown={e => e.stopPropagation()}
+        >
+          <p className="px-2.5 pt-2 pb-1 font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50">
+            Move or copy to space
+          </p>
+          <div className="flex flex-col gap-px p-1.5 pt-0 max-h-[280px] overflow-y-auto">
+            {workspaces.filter(w => w.id !== useStore.getState().activeProjectId).map(w => (
+              <div
+                key={w.id}
+                className="group/row flex items-center gap-1 rounded-sm px-2 py-1 hover:bg-secondary/40"
+              >
+                <span className="flex-1 truncate font-mono text-[11px] font-bold text-foreground">
+                  {w.name}
+                </span>
+                <button
+                  onClick={() => { 
+                    useStore.getState().moveBlockToProject(block.id, useStore.getState().activeProjectId, w.id)
+                    setIsMoveMenuOpen(false) 
+                  }}
+                  className="flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-muted-foreground hover:bg-primary/15 hover:text-primary transition-colors"
+                  title={`Move to ${w.name}`}
+                >
+                  <ArrowRightFromLine className="h-3 w-3" />
+                  <span className="font-mono text-[9px] uppercase tracking-wider">Move</span>
+                </button>
+                <button
+                  onClick={() => { 
+                    useStore.getState().copyBlockToProject(block.id, useStore.getState().activeProjectId, w.id)
+                    setIsMoveMenuOpen(false) 
+                  }}
+                  className="flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-muted-foreground hover:bg-primary/15 hover:text-primary transition-colors"
+                  title={`Copy to ${w.name}`}
+                >
+                  <Copy className="h-3 w-3" />
+                  <span className="font-mono text-[9px] uppercase tracking-wider">Copy</span>
+                </button>
+              </div>
+            ))}
+            {workspaces.filter(w => w.id !== useStore.getState().activeProjectId).length === 0 && (
+              <p className="px-2 py-3 text-center font-mono text-[10px] text-muted-foreground/60">
+                No other spaces — create one first.
+              </p>
+            )}
           </div>
         </div>,
         document.body

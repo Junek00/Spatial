@@ -273,7 +273,7 @@ export default function Page() {
       ...p,
       blocks: p.blocks.map(b => b.id === blockId ? {
         ...b,
-        subTasks: b.subTasks?.map(st => st.id === subTaskId ? { ...st, isDone: !st.isDone } : st)
+        subTasks: b.subTasks?.map((st: any) => st.id === subTaskId ? { ...st, isDone: !st.isDone } : st)
       } : b)
     }))
   }, [updateActiveProject])
@@ -283,7 +283,7 @@ export default function Page() {
       ...p,
       blocks: p.blocks.map(b => b.id === blockId ? {
         ...b,
-        subTasks: b.subTasks?.filter(st => st.id !== subTaskId)
+        subTasks: b.subTasks?.filter((st: any) => st.id !== subTaskId)
       } : b)
     }))
   }, [updateActiveProject])
