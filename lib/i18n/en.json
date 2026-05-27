@@ -1,0 +1,20 @@
+{
+  "node": "Node",
+  "nodes": "Nodes",
+  "unrelated": "Unrelated",
+  "connectedNodes": "Connected Nodes",
+  "nodeId": "Node ID:",
+  "connections": "Connections",
+  "confidence": "Confidence",
+  "typeChange": "Change Type",
+  "saveHint": "Enter ↵ to save · Shift+Enter for new line · Esc to cancel",
+  "markdownEditor": "Markdown Editor",
+  "deleteTaskConfirm": "Delete this task?",
+  "noApiKey": "No API key — add in ☰ Settings.",
+  "rateLimit": "Rate limit exceeded (429). Try again later.",
+  "networkError": "Network error. Check your connection.",
+  "serverError": "Server error (5xx). Try again later.",
+  "jsonError": "JSON error — model might not support JSON output.",
+  "analysisFailed": "Analysis failed. Double-click to retry.",
+  "startWriting": "Start writing..."
+}

@@ -1,0 +1,20 @@
+{
+  "node": "노드",
+  "nodes": "노드",
+  "unrelated": "주제 무관",
+  "connectedNodes": "연결된 노드",
+  "nodeId": "노드 ID:",
+  "connections": "연결",
+  "confidence": "신뢰도",
+  "typeChange": "타입 변경",
+  "saveHint": "Enter ↵ 저장 · Shift+Enter 줄바꿈 · Esc 취소",
+  "markdownEditor": "마크다운 편집기",
+  "deleteTaskConfirm": "이 할 일을 삭제하시겠습니까?",
+  "noApiKey": "API 키 없음 — ☰ 설정에서 추가하세요.",
+  "rateLimit": "요청 한도 초과(429). 잠시 후 재시도하세요.",
+  "networkError": "네트워크 오류. 연결 상태를 확인하세요.",
+  "serverError": "AI 서버 오류(5xx). 잠시 후 재시도하세요.",
+  "jsonError": "응답 형식 오류 — 이 모델이 JSON 출력을 지원하지 않을 수 있습니다.",
+  "analysisFailed": "분석 실패. 더블클릭으로 재시도하세요.",
+  "startWriting": "작성 시작..."
+}

@@ -1,0 +1,19 @@
+# Nodepad Architecture & Coding Guidelines
+
+## 1. State Management (Zustand)
+- **Rule**: All persistent or global state must reside in `lib/store.ts` using Zustand.
+- **Why**: Prevents prop drilling and keeps components like `page.tsx` clean.
+
+## 2. AI & Async Logic (Hooks)
+- **Rule**: Do not put heavy `fetch` or AI generation logic directly in components. Use dedicated custom hooks like `lib/hooks/useNodepadAI.ts`.
+- **Why**: Separates business logic from UI, making it easier to swap AI providers later.
+
+## 3. i18n (Internationalization)
+- **Rule**: Never hardcode UI text (Korean or English) in components. Always use the `useTranslation` hook from `lib/i18n.ts`.
+- **Why**: Enables easy addition of new languages in the future without touching component code.
+
+## 4. Theming & Styling (CSS Variables)
+- **Rule**: Do not hardcode specific border-radius or complex shadows. Use CSS variables defined in `app/globals.css` (e.g. `var(--radius)`).
+- **Why**: Allows swapping the entire app's look and feel by changing `data-theme` on the body.
+
+Follow these rules rigidly during any code modification or refactoring.

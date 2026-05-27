@@ -1,0 +1,256 @@
+/* Pretendard — 한국어+영문 통합 폰트 */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* ── 라이트 모드 (기본 / Notion 스펙) ───────────────────────────────────── */
+:root {
+  --background: #FFFFFF;
+  --foreground: #373530;
+  --card: #FFFFFF;
+  --card-foreground: #373530;
+  --popover: #FFFFFF;
+  --popover-foreground: #373530;
+  --primary: #337EA9;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F1F1EF;
+  --secondary-foreground: #373530;
+  --muted: #F1F1EF;
+  --muted-foreground: #787774;
+  --accent: #E9F3F7;
+  --accent-foreground: #337EA9;
+  --destructive: #D44C47;
+  --destructive-foreground: #FFFFFF;
+  --border: #E9E9E7;
+  --input: #E9E9E7;
+  --ring: #337EA9;
+  --chart-1: #337EA9;
+  --chart-2: #548164;
+  --chart-3: #C29343;
+  --chart-4: #8A67AB;
+  --chart-5: #C4554D;
+  --radius: 0.5rem;
+  --sidebar: #F7F7F5;
+  --sidebar-foreground: #373530;
+  --sidebar-primary: #337EA9;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #E9F3F7;
+  --sidebar-accent-foreground: #337EA9;
+  --sidebar-border: #E9E9E7;
+  --sidebar-ring: #337EA9;
+
+  /* 노트 타입 색상 — 라이트 모드 (채도 낮은 파스텔) */
+  --type-entity: oklch(0.50 0.12 250);
+  --type-claim: oklch(0.55 0.13 75);
+  --type-question: oklch(0.50 0.15 285);
+  --type-task: oklch(0.50 0.11 195);
+  --type-idea: oklch(0.52 0.17 340);
+  --type-reference: oklch(0.48 0.13 230);
+  --type-quote: oklch(0.48 0.14 155);
+  --type-definition: oklch(0.50 0.10 220);
+  --type-opinion: oklch(0.52 0.15 340);
+  --type-reflection: oklch(0.48 0.16 300);
+  --type-narrative: oklch(0.53 0.13 50);
+  --type-comparison: oklch(0.50 0.11 180);
+  --type-thesis: oklch(0.60 0.16 85);
+  --type-general: oklch(0.45 0.02 260);
+  --thesis-gradient: linear-gradient(135deg, oklch(0.55 0.12 160), oklch(0.55 0.12 250));
+  --thesis-foreground: #FFFFFF;
+  --thesis-accent: oklch(0.55 0.12 200);
+}
+
+/* ── 다크 모드 (Notion 스펙) ──────────────────────────────────────────── */
+.dark {
+  --background: #191919;
+  --foreground: #D4D4D4;
+  --card: #252525;
+  --card-foreground: #D4D4D4;
+  --popover: #252525;
+  --popover-foreground: #D4D4D4;
+  --primary: #2E7CD1;
+  --primary-foreground: #FFFFFF;
+  --secondary: #2E2E2E;
+  --secondary-foreground: #D4D4D4;
+  --muted: #252525;
+  --muted-foreground: #9B9B9B;
+  --accent: #1F282D;
+  --accent-foreground: #D4D4D4;
+  --destructive: #CD4945;
+  --destructive-foreground: #FFFFFF;
+  --border: #2E2E2E;
+  --input: #2E2E2E;
+  --ring: #2E7CD1;
+  --chart-1: #2E7CD1;
+  --chart-2: #4F9768;
+  --chart-3: #CA8E1B;
+  --chart-4: #865DBB;
+  --chart-5: #BE524B;
+  --sidebar: #1F1F1F;
+  --sidebar-foreground: #D4D4D4;
+  --sidebar-primary: #2E7CD1;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #1F282D;
+  --sidebar-accent-foreground: #D4D4D4;
+  --sidebar-border: #2E2E2E;
+  --sidebar-ring: #2E7CD1;
+
+  /* 노트 타입 색상 — 다크 모드 (밝고 선명한 톤) */
+  --type-entity: oklch(0.65 0.12 250);
+  --type-claim: oklch(0.75 0.15 80);
+  --type-question: oklch(0.68 0.18 290);
+  --type-task: oklch(0.72 0.14 195);
+  --type-idea: oklch(0.72 0.22 340);
+  --type-reference: oklch(0.65 0.15 230);
+  --type-quote: oklch(0.72 0.19 155);
+  --type-definition: oklch(0.70 0.13 220);
+  --type-opinion: oklch(0.70 0.18 340);
+  --type-reflection: oklch(0.65 0.20 300);
+  --type-narrative: oklch(0.72 0.16 50);
+  --type-comparison: oklch(0.68 0.14 180);
+  --type-thesis: oklch(0.86 0.19 88);
+  --type-general: oklch(0.55 0.02 260);
+  --thesis-gradient: linear-gradient(135deg, oklch(0.70 0.15 160), oklch(0.70 0.15 250));
+  --thesis-foreground: #191919;
+  --thesis-accent: oklch(0.70 0.15 200);
+}
+
+/* ── 테마 바리에이션 (확장형 디자인 시스템) ─────────────────────────────────── */
+[data-theme="soft-rounded"] {
+  --radius: 1.5rem;
+  /* 향후 간격(spacing)이나 다른 디자인 토큰 추가 가능 */
+}
+
+@theme inline {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+               "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --font-mono: var(--font-geist-mono), "Courier New", monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-type-entity: var(--type-entity);
+  --color-type-claim: var(--type-claim);
+  --color-type-question: var(--type-question);
+  --color-type-task: var(--type-task);
+  --color-type-idea: var(--type-idea);
+  --color-type-reference: var(--type-reference);
+  --color-type-quote: var(--type-quote);
+  --color-type-definition: var(--type-definition);
+  --color-type-opinion: var(--type-opinion);
+  --color-type-reflection: var(--type-reflection);
+  --color-type-narrative: var(--type-narrative);
+  --color-type-comparison: var(--type-comparison);
+  --color-type-thesis: var(--type-thesis);
+  --color-type-general: var(--type-general);
+  --color-thesis-gradient: var(--thesis-gradient);
+  --color-thesis-foreground: var(--thesis-foreground);
+  --color-thesis-accent: var(--thesis-accent);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    word-break: keep-all;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--muted-foreground);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--muted-foreground) 0%,
+    var(--foreground) 50%,
+    var(--muted-foreground) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2s linear infinite;
+}
+
+.shimmer-body {
+  background: linear-gradient(
+    90deg,
+    var(--muted-foreground) 0%,
+    var(--muted-foreground) 15%,
+    var(--foreground) 50%,
+    var(--muted-foreground) 85%,
+    var(--muted-foreground) 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.rtl-text {
+  font-family: var(--font-vazirmatn), var(--font-sans);
+  direction: rtl;
+  text-align: right;
+}

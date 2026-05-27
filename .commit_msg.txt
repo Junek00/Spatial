@@ -1,0 +1,17 @@
+feat: nodepad UI/UX 개선, 아키텍처 리팩토링 및 다국어(i18n) 지원 추가
+
+[UI/UX 및 기능 개선]
+- 입력창 우측 Cmd+Z, Cmd+K 버튼 클릭 상호작용 추가 및 토글 닫힘 기능 구현
+- 입력창 # 입력 시 타입(Entity, Claim, Task 등)을 강제 지정할 수 있는 드롭다운 자동완성 기능 추가
+- 에러 발생 시 원인(Network, Rate Limit, API Key 등)을 명확히 알 수 있도록 전용 에러 카드 및 스타일링 추가
+- 타일 뷰(Tiling Area)에서 Task 카드를 상단에 고정(Sticky)하고, 새 노트 추가 시 화면 하단으로 부드럽게 자동 스크롤되도록 개선
+- InceptionLabs Mercury API 지원 추가 및 통합
+
+[아키텍처 및 다국어 지원]
+- 거대한 로컬 상태(useState)들을 Zustand 전역 스토어(lib/store.ts)로 이관
+- AI 텍스트 생성 로직을 커스텀 훅(useNodepadAI.ts, useUndo.ts)으로 분리
+- 한/영 전환 버튼(🌐) 및 i18n 시스템(ko.json, en.json) 도입
+- AI 프롬프트에 [RESPOND IN: Korean] 지시어를 강제하여 다국어 안정성 확보
+- globals.css에 CSS 변수를 활용한 [data-theme="soft-rounded"] 바리에이션 뼈대 구축
+- 한글 타이핑 중 엔터키 입력 시 글자가 중복되는 IME 버그 해결 및 서브태스크 중복 방지 로직 추가
+- 향후 AI 기반 개발을 위한 .cursorrules (Knowledge Skill) 명세 추가
