@@ -10,17 +10,12 @@ import {
 import { Command } from "cmdk"
 import { useModKey } from "@/lib/utils"
 import { CONTENT_TYPE_CONFIG, type ContentType } from "@/lib/content-types"
+import { useTranslation } from "@/lib/i18n"
 
 const TYPE_ENTRIES = (Object.entries(CONTENT_TYPE_CONFIG) as [ContentType, typeof CONTENT_TYPE_CONFIG[ContentType]][])
   .filter(([t]) => t !== "thesis" && t !== "general")
 
-const ACTION_ITEMS = [
-  { id: "export-nodepad", icon: FolderDown,  label: "내보내기",  sub: ".nodepad"  },
-  { id: "import-nodepad", icon: FolderInput, label: "가져오기",  sub: ".nodepad"  },
-  { id: "export-md",      icon: Download,    label: "내보내기",  sub: "마크다운"  },
-  { id: "copy-md",        icon: Clipboard,   label: "복사",      sub: "마크다운"  },
-  { id: "clear",          icon: Trash2,      label: "초기화",    sub: "캔버스"    },
-]
+
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 
@@ -39,6 +34,7 @@ export function VimInput({ onSubmit, onCommand, onUndo, isCommandKOpen, setIsCom
   const [search, setSearch] = React.useState("")
   const [focusedIdx, setFocusedIdx] = React.useState(0)
   const mod = useModKey()
+  const { t } = useTranslation()
 
   const mainInputRef = React.useRef<HTMLInputElement>(null)
   const searchInputRef = React.useRef<HTMLInputElement>(null)
@@ -77,17 +73,25 @@ export function VimInput({ onSubmit, onCommand, onUndo, isCommandKOpen, setIsCom
   // ── Items (mod-key aware) ───────────────────────────────────────────────
 
   const VIEW_ITEMS = React.useMemo(() => [
-    { id: "tiling", icon: Grid,    label: "타일",   sub: "" },
-    { id: "kanban", icon: Trello,  label: "칸반",   sub: "" },
-    { id: "graph",  icon: GitFork, label: "그래프", sub: "" },
-  ], [])
+    { id: "tiling", icon: Grid,    label: t("tile"),   sub: "" },
+    { id: "kanban", icon: Trello,  label: t("kanban"),   sub: "" },
+    { id: "graph",  icon: GitFork, label: t("graph"), sub: "" },
+  ], [t])
 
   const NAV_ITEMS = React.useMemo(() => [
-    { id: "open-projects",  icon: FolderOpen, label: "프로젝트",   sub: "" },
-    { id: "new-project",    icon: FolderPlus, label: "새 프로젝트", sub: "" },
-    { id: "open-index",     icon: BookOpen,   label: "인덱스",     sub: "" },
-    { id: "open-synthesis", icon: Sparkles,   label: "합성",       sub: "" },
-  ], [])
+    { id: "open-projects",  icon: FolderOpen, label: t("projects"),   sub: "" },
+    { id: "new-project",    icon: FolderPlus, label: t("newProject"), sub: "" },
+    { id: "open-index",     icon: BookOpen,   label: t("index"),     sub: "" },
+    { id: "open-synthesis", icon: Sparkles,   label: t("synthesis"),       sub: "" },
+  ], [t])
+
+  const ACTION_ITEMS = React.useMemo(() => [
+    { id: "export-nodepad", icon: FolderDown,  label: t("export"),  sub: ".nodepad"  },
+    { id: "import-nodepad", icon: FolderInput, label: t("import"),  sub: ".nodepad"  },
+    { id: "export-md",      icon: Download,    label: t("export"),  sub: t("markdown")  },
+    { id: "copy-md",        icon: Clipboard,   label: t("copy"),      sub: t("markdown")  },
+    { id: "clear",          icon: Trash2,      label: t("clear"),    sub: t("canvas")    },
+  ], [t])
 
   // ── Filtered items ──────────────────────────────────────────────────────
 

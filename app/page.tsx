@@ -19,6 +19,7 @@ import { TileIndex } from "@/components/tile-index"
 import { useStore } from "@/lib/store"
 import { useUndo } from "@/lib/hooks/useUndo"
 import { useNodepadAI, generateId } from "@/lib/hooks/useNodepadAI"
+import { useTranslation } from "@/lib/i18n"
 
 export default function Page() {
   const { 
@@ -41,9 +42,11 @@ export default function Page() {
   const [showHelpTooltip, setShowHelpTooltip] = useState(false)
   
   const helpTooltipTimer = useRef<NodeJS.Timeout | null>(null)
-  const { settings, updateSettings, currentModel } = useAISettings()
+  const { updateSettings, currentModel } = useAISettings()
+  const settings = useStore(state => state.aiSettings)
   const debounceTimers = useRef<Record<string, Record<string, NodeJS.Timeout>>>({})
   const importInputRef = useRef<HTMLInputElement>(null)
+  const { t } = useTranslation()
 
   useEffect(() => {
     setIsLoaded(true)
@@ -403,13 +406,13 @@ export default function Page() {
 
         {!settings.apiKey && (
           <div className="flex items-center justify-center gap-3 px-4 py-2 bg-amber-950/80 border-b border-amber-800/60 text-amber-200 text-xs shrink-0">
-            <span className="opacity-80">⚡ AI enrichment is inactive — add an API key to classify and annotate your notes.</span>
+            <span className="opacity-80">{t("aiInactiveMessage")}</span>
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={() => { setIsSidebarOpen(true); setJumpToSettings(true) }}
                 className="px-2.5 py-1 rounded bg-amber-700/60 hover:bg-amber-600/70 text-amber-100 font-medium transition-colors cursor-pointer border border-amber-600/50"
               >
-                Add API key →
+                {t("addApiKeyBtn")}
               </button>
               <a
                 href="https://openrouter.ai/keys"
@@ -417,7 +420,7 @@ export default function Page() {
                 rel="noopener noreferrer"
                 className="opacity-60 hover:opacity-90 transition-opacity underline underline-offset-2"
               >
-                Get a key ↗
+                {t("getApiKeyBtn")}
               </a>
             </div>
           </div>

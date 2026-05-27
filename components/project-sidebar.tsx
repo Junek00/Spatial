@@ -29,6 +29,7 @@ import {
   type AIProvider,
   type FetchedModel,
 } from "@/lib/ai-settings"
+import { useTranslation } from "@/lib/i18n"
 
 interface Project {
   id: string
@@ -83,6 +84,7 @@ export function ProjectSidebar({
   // local draft for settings (only save on "Save")
   const [draft, setDraft] = useState<AISettings>(aiSettings)
   const inputRef = useRef<HTMLInputElement>(null)
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (editingId && inputRef.current) {
@@ -582,7 +584,7 @@ export function ProjectSidebar({
                                 return presetHits === 0 && fetchedHits === 0
                               })() && (
                                 <div className="px-2.5 py-2 border-t border-border mt-1">
-                                  <span className="font-sans text-[9px] text-muted-foreground/50">"{modelSearch}"와(과) 일치하는 모델이 없습니다.</span>
+                                  <span className="font-sans text-[9px] text-muted-foreground/50">"{modelSearch}" {t("noModelFound")}</span>
                                 </div>
                               )}
                             </div>
@@ -599,13 +601,13 @@ export function ProjectSidebar({
                     <div className="flex items-start gap-2">
                       <Globe className="h-3.5 w-3.5 mt-0.5 text-primary/60 shrink-0" />
                       <div>
-                        <div className="font-mono text-[11px] font-bold text-foreground">웹 그라운딩</div>
+                        <div className="font-mono text-[11px] font-bold text-foreground">{t("webGrounding")}</div>
                         <div className="font-mono text-[9px] text-muted-foreground mt-0.5 leading-relaxed">
                           {selectedModel.supportsGrounding
                             ? draft.provider === "openai"
-                              ? `실시간 웹 검색에 ${selectedModel.groundingModelId ?? "search-preview"} 사용`
-                              : ":online 태그로 실시간 검색"
-                            : "이 모델에서는 사용할 수 없음"}
+                              ? `${t("realtimeSearchPrefix")} ${selectedModel.groundingModelId ?? "search-preview"} ${t("realtimeSearchSuffix")}`
+                              : `:online ${t("realtimeSearchSuffix")}`
+                            : t("notAvailableForModel")}
                         </div>
                       </div>
                     </div>
@@ -630,7 +632,7 @@ export function ProjectSidebar({
                     : "bg-muted/30 border border-border text-muted-foreground"
                 }`}>
                   <span className={`h-1.5 w-1.5 rounded-full ${draft.apiKey ? "bg-primary animate-pulse" : "bg-muted-foreground/30"}`} />
-                  {draft.apiKey ? `${currentPreset.label} — API 키 설정됨` : "API 키 없음 — AI 비활성화"}
+                  {draft.apiKey ? `${currentPreset.label} — ${t("apiKeySet")}` : t("apiKeyMissing")}
                 </div>
               </motion.div>
             )}
@@ -645,14 +647,14 @@ export function ProjectSidebar({
                 onClick={handleSaveSettings}
                 className="flex items-center justify-between w-full h-8 px-2.5 rounded-sm bg-primary hover:bg-primary/90 text-primary-foreground font-mono text-xs font-bold uppercase tracking-[0.1em] transition-all active:scale-[0.98] shadow-sm"
               >
-                <span>설정 저장</span>
+                <span>{t("saveSettings")}</span>
                 <Save className="h-3.5 w-3.5" />
               </button>
               <button
                 onClick={() => setShowSettings(false)}
                 className="flex items-center justify-center w-full h-8 px-2.5 rounded-sm bg-muted/50 hover:bg-muted text-muted-foreground font-mono text-xs font-bold uppercase tracking-[0.1em] transition-all active:scale-[0.98] border border-border"
               >
-                취소
+                {t("cancel")}
               </button>
             </div>
           ) : (
@@ -661,22 +663,21 @@ export function ProjectSidebar({
                 onClick={onCreateProject}
                 className="flex items-center justify-between w-full h-8 px-2.5 rounded-sm bg-primary hover:bg-primary/90 text-primary-foreground font-mono text-xs font-bold uppercase tracking-[0.1em] transition-all active:scale-[0.98] shadow-sm"
               >
-                <span>새 스페이스</span>
+                <span>{t("newSpace")}</span>
                 <Plus className="h-3.5 w-3.5" />
               </button>
               <button
                 onClick={onImportProject}
                 className="flex items-center justify-between w-full h-8 px-2.5 rounded-sm bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground font-mono text-xs font-bold uppercase tracking-[0.1em] transition-all active:scale-[0.98] border border-border"
-                title=".nodepad 파일 가져오기"
               >
-                <span>가져오기 (.nodepad)</span>
+                <span>{t("importNodepad")}</span>
                 <FolderInput className="h-3.5 w-3.5" />
               </button>
               <button
                 onClick={() => setShowSettings(true)}
                 className="flex items-center justify-between w-full h-8 px-2.5 rounded-sm bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground font-mono text-xs font-bold uppercase tracking-[0.1em] transition-all active:scale-[0.98] border border-border"
               >
-                <span>설정</span>
+                <span>{t("settings")}</span>
                 <Settings className="h-3.5 w-3.5" />
               </button>
             </div>

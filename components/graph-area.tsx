@@ -5,6 +5,7 @@ import * as d3 from "d3"
 import { CONTENT_TYPE_CONFIG } from "@/lib/content-types"
 import type { TextBlock } from "@/components/tile-card"
 import { GraphDetailPanel } from "./graph-detail-panel"
+import { useTranslation } from "@/lib/i18n"
 import { useModKey } from "@/lib/utils"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -186,6 +187,7 @@ export function GraphArea({
   highlightedBlockId,
   onHighlight,
 }: GraphAreaProps) {
+  const { t } = useTranslation()
   const mod = useModKey()
   const containerRef = React.useRef<HTMLDivElement>(null)
   const svgRef       = React.useRef<SVGSVGElement>(null)
@@ -402,14 +404,14 @@ export function GraphArea({
         {blocks.length === 0 && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="flex flex-col items-center gap-8 w-[420px]">
-              <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/35">force-directed graph view</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/35">{t("graphViewHeader")}</p>
 
               <div className="flex flex-col gap-5 w-full">
                 {([
-                  { color: "var(--type-claim)",    label: "claim",    text: "Caffeine improves short-term recall by ~15%" },
-                  { color: "var(--type-entity)",   label: "entity",   text: "Adam Grant — organisational psychologist" },
-                  { color: "var(--type-question)", label: "question", text: "Does creativity require periods of solitude?" },
-                  { color: "var(--type-idea)",     label: "idea",     text: "Collaboration refines ideas, solitude generates them" },
+                  { color: "var(--type-claim)",    label: "claim",    text: t("exampleClaim") },
+                  { color: "var(--type-entity)",   label: "entity",   text: t("exampleEntity") },
+                  { color: "var(--type-question)", label: "question", text: t("exampleQuestion") },
+                  { color: "var(--type-idea)",     label: "idea",     text: t("exampleIdea") },
                 ] as const).map(({ color, label, text }) => (
                   <div key={label} className="flex items-start gap-4">
                     <div className="w-0.5 self-stretch rounded-full shrink-0 mt-0.5" style={{ background: color }} />
@@ -422,7 +424,7 @@ export function GraphArea({
               </div>
 
               <p className="text-[13px] text-white uppercase tracking-[0.15em] whitespace-nowrap">
-                {`type anything · #type to classify · ${mod}K for commands`}
+                {t("graphHelp")}
               </p>
             </div>
           </div>
@@ -691,7 +693,7 @@ export function GraphArea({
           const node = nodesRef.current.find(n => n.id === tooltip.id)
           if (!node) return null
           const text = node.isSynthesis
-            ? (node.synthesisText ?? "Synthesis")
+            ? (node.synthesisText ?? t("synthesis"))
             : (node.block?.text ?? "")
           const config = node.block ? CONTENT_TYPE_CONFIG[node.block.contentType] : null
           const accent = config?.accentVar ?? "var(--type-thesis)"
@@ -712,7 +714,7 @@ export function GraphArea({
                     style: { color: "black", opacity: 0.7 },
                   })}
                   <span className="font-mono text-[9px] font-black uppercase tracking-widest text-black/70">
-                    {node.isSynthesis ? "Synthesis" : config?.label}
+                    {node.isSynthesis ? t("synthesis") : config?.label}
                   </span>
                   {node.block?.category && (
                     <span className="ml-auto font-mono text-[8px] text-black/50 truncate max-w-[90px]">
