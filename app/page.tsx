@@ -42,8 +42,7 @@ export default function Page() {
   const [showHelpTooltip, setShowHelpTooltip] = useState(false)
   
   const helpTooltipTimer = useRef<NodeJS.Timeout | null>(null)
-  const { updateSettings, currentModel } = useAISettings()
-  const settings = useStore(state => state.aiSettings)
+  const { settings, updateSettings, currentModel } = useAISettings()
   const debounceTimers = useRef<Record<string, Record<string, NodeJS.Timeout>>>({})
   const importInputRef = useRef<HTMLInputElement>(null)
   const { t } = useTranslation()

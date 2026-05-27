@@ -1,15 +1,12 @@
 "use client"
 
-import { useEffect, useState, useMemo, useRef } from "react"
-import { AnimatePresence, motion } from "framer-motion"
-import { useTheme } from "next-themes"
+import { useEffect, useState, useMemo } from "react"
 import { CONTENT_TYPE_CONFIG } from "@/lib/content-types"
 import type { TextBlock } from "@/lib/types"
-import { AboutPanel } from "@/components/about-panel"
 import { useTranslation } from "@/lib/i18n"
 import { useStore } from "@/lib/store"
 
-import { Menu, LayoutList, Sparkles, Sun, Moon, Languages } from "lucide-react"
+import { Menu, LayoutList, Sparkles } from "lucide-react"
 
 interface StatusBarProps {
   blockCount: number
@@ -39,17 +36,11 @@ export function StatusBar({
   onIndexToggle,
   onGhostPanelToggle,
   modelLabel,
-  showHelpTooltip,
-  onHelpTooltipDismiss,
 }: StatusBarProps) {
   const [time, setTime] = useState("")
-  const [isAboutOpen, setIsAboutOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const { resolvedTheme, setTheme } = useTheme()
-  const { t, lang } = useTranslation()
-  const { setLanguage } = useStore()
+  const { t } = useTranslation()
+  const lang = useStore(state => state.language)
 
-  useEffect(() => setMounted(true), [])
 
   const activity = useMemo(() => {
     return {
@@ -204,62 +195,8 @@ export function StatusBar({
           >
             <LayoutList className="h-4 w-4" />
           </button>
-
-          <button
-            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-            className="p-1.5 rounded-sm transition-all duration-200 hover:bg-secondary text-muted-foreground/50 hover:text-foreground"
-            title={t("toggleTheme")}
-          >
-            {mounted && (resolvedTheme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />)}
-          </button>
-          
-          <button
-            onClick={() => setLanguage(lang === "ko" ? "en" : "ko")}
-            className="p-1.5 rounded-sm transition-all duration-200 hover:bg-secondary text-muted-foreground/50 hover:text-foreground flex items-center gap-1 font-mono text-[10px] font-bold uppercase"
-            title={t("toggleLanguage")}
-          >
-            <Languages className="h-4 w-4" />
-            <span>{lang}</span>
-          </button>
-
-          <span className="w-px h-4 bg-border/60 mx-0.5" />
-
-          <div className="relative">
-            <button
-              onClick={() => {
-                setIsAboutOpen(true)
-                onHelpTooltipDismiss?.()
-              }}
-              className="p-1.5 rounded-sm transition-all duration-200 hover:bg-secondary text-muted-foreground/40 hover:text-foreground"
-              title={t("aboutNodepad")}
-            >
-              <span className="font-mono text-[11px] font-black leading-none">?</span>
-            </button>
-
-            {/* Help tooltip */}
-            <AnimatePresence>
-              {showHelpTooltip && (
-                <motion.div
-                  initial={{ opacity: 0, y: -6, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -4, scale: 0.96 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="absolute right-0 top-full mt-2.5 z-[300] w-48 rounded-sm bg-primary text-primary-foreground shadow-lg pointer-events-none select-none"
-                >
-                  <div className="absolute -top-1.5 right-2.5 w-3 h-3 rotate-45 bg-primary rounded-[2px]" />
-                  <div className="relative px-3 py-2.5">
-                    <p className="text-sm font-medium leading-snug">
-                      {t("helpTooltip")}
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
         </div>
       </div>
-
-      <AboutPanel open={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
     </header>
   )
 }

@@ -19,6 +19,10 @@ import {
   Save,
   FolderInput,
   Search,
+  Sun,
+  Moon,
+  Languages,
+  Info,
 } from "lucide-react"
 import {
   AI_PROVIDER_PRESETS,
@@ -30,6 +34,9 @@ import {
   type FetchedModel,
 } from "@/lib/ai-settings"
 import { useTranslation } from "@/lib/i18n"
+import { useTheme } from "next-themes"
+import { useStore } from "@/lib/store"
+import { AboutPanel } from "@/components/about-panel"
 
 interface Project {
   id: string
@@ -84,7 +91,13 @@ export function ProjectSidebar({
   // local draft for settings (only save on "Save")
   const [draft, setDraft] = useState<AISettings>(aiSettings)
   const inputRef = useRef<HTMLInputElement>(null)
-  const { t } = useTranslation()
+  const { t, lang } = useTranslation()
+  const { resolvedTheme, setTheme } = useTheme()
+  const setLanguage = useStore(state => state.setLanguage)
+  const [mounted, setMounted] = useState(false)
+  const [isAboutOpen, setIsAboutOpen] = useState(false)
+
+  useEffect(() => setMounted(true), [])
 
   useEffect(() => {
     if (editingId && inputRef.current) {
@@ -322,10 +335,58 @@ export function ProjectSidebar({
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: 20, opacity: 0 }}
                 transition={{ duration: 0.15 }}
-                className="absolute inset-0 overflow-y-auto px-3 py-4 flex flex-col gap-5 custom-scrollbar"
+                className="absolute inset-0 overflow-y-auto px-3 py-4 flex flex-col gap-4 custom-scrollbar"
               >
-                {/* Provider Selector */}
-                <div className="flex flex-col gap-2">
+                {/* General Settings */}
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-center gap-2 px-1 mb-1">
+                    <span className="font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground">General</span>
+                    <div className="h-px flex-1 bg-border/50" />
+                  </div>
+                  <button
+                    onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                    className="flex items-center gap-3 w-full px-2.5 py-2 rounded-md hover:bg-muted/50 transition-colors text-left"
+                  >
+                    {mounted && (resolvedTheme === "dark" ? <Sun className="h-4 w-4 text-muted-foreground" /> : <Moon className="h-4 w-4 text-muted-foreground" />)}
+                    <div>
+                      <div className="font-mono text-[11px] font-bold text-foreground">{t("toggleTheme")}</div>
+                      <div className="font-mono text-[9px] text-muted-foreground mt-0.5">
+                        {resolvedTheme === "dark" ? "Dark mode" : "Light mode"}
+                      </div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setLanguage(lang === "ko" ? "en" : "ko")}
+                    className="flex items-center gap-3 w-full px-2.5 py-2 rounded-md hover:bg-muted/50 transition-colors text-left"
+                  >
+                    <Languages className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <div className="font-mono text-[11px] font-bold text-foreground">{t("toggleLanguage")}</div>
+                      <div className="font-mono text-[9px] text-muted-foreground mt-0.5 uppercase tracking-wider font-bold">
+                        {lang === "ko" ? "한국어" : "English"}
+                      </div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setIsAboutOpen(true)}
+                    className="flex items-center gap-3 w-full px-2.5 py-2 rounded-md hover:bg-muted/50 transition-colors text-left"
+                  >
+                    <Info className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <div className="font-mono text-[11px] font-bold text-foreground">{t("aboutNodepad")}</div>
+                      <div className="font-mono text-[9px] text-muted-foreground mt-0.5">
+                        {t("helpTooltip")}
+                      </div>
+                    </div>
+                  </button>
+                </div>
+
+                {/* AI Settings */}
+                <div className="flex flex-col gap-1.5 mt-2">
+                  <div className="flex items-center gap-2 px-1 mb-1">
+                    <span className="font-mono text-[9px] font-bold tracking-widest uppercase text-primary">AI Provider</span>
+                    <div className="h-px flex-1 bg-border/50" />
+                  </div>
                   <label className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
                     제공업체
                   </label>
@@ -684,6 +745,7 @@ export function ProjectSidebar({
           )}
         </div>
       </div>
+      <AboutPanel open={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
     </div>
   )
 }
