@@ -14,11 +14,11 @@
 ### English
 This version is a heavily refactored fork of the original nodepad, designed for better maintainability, localization, and extensibility.
 
-- **i18n Support (Korean/English):** Full UI localization with a real-time language switcher in the status bar (`lib/i18n.ts`), plus enforced AI prompt language directives (`[RESPOND IN: Korean]`).
+- **i18n Support (Korean/English):** Full UI localization including the comprehensive About panel, with a real-time language switcher in the Settings panel (`lib/i18n.ts`), plus enforced AI prompt language directives (`[RESPOND IN: Korean]`).
 - **Zustand State Management:** Migrated from massive monolithic React `useState` hooks to a clean, persistent **Zustand** store (`lib/store.ts`).
 - **Decoupled AI Hooks:** Heavy background logic (like `enrichBlock` and `generateGhostNote`) has been extracted into modular custom hooks (`useNodepadAI`).
 - **Scalable Theming System:** Reorganized `globals.css` with CSS variables and data-attributes (e.g. `[data-theme="soft-rounded"]`) to allow easy aesthetic variations.
-- **Enhanced UI/UX:** Clickable `Cmd+Z`/`Cmd+K` buttons, interactive `#` autocomplete dropdown to force content types, detailed error cards, and Tiling view improvements (sticky Task cards, smooth automatic scrolling).
+- **Enhanced UI/UX:** Consolidated Theme, Language, and About toggles into the Project Sidebar's Settings panel. Clickable `Cmd+Z`/`Cmd+K` buttons, interactive `#` autocomplete dropdown to force content types, detailed error cards, and Tiling view improvements.
 - **Inception Mercury API Support:** Added native support for InceptionLabs Mercury API. Mercury is a diffusion-based LLM that generates tokens in parallel, making it extremely fast (1000+ tokens/sec) and ideal for real-time agentic workflows. It also offers a generous free tier without requiring a credit card.
 - **Bug Fixes:** Resolved Korean IME composition duplication bugs and prevented subtask duplications.
 - **AI-Agent Ready:** Includes a `.cursorrules` file detailing architectural guidelines for AI coding assistants.
@@ -26,11 +26,11 @@ This version is a heavily refactored fork of the original nodepad, designed for 
 ### 한국어
 이 버전은 유지보수, 지역화(다국어), 그리고 확장성을 위해 원본 nodepad를 대대적으로 리팩토링한 커스텀 포크입니다.
 
-- **다국어 지원 (한/영):** 상태 표시줄에 실시간 언어 전환기를 추가하고 UI 전체를 번역했으며, AI 프롬프트에 `[RESPOND IN: Korean]` 지시어를 강제하여 안정적인 한국어 출력을 보장합니다.
+- **다국어 지원 (한/영):** 상세한 소개 패널(About nodepad)을 포함한 UI 전체를 번역했습니다. 설정 패널(사이드바)에 실시간 언어 전환기를 제공하며, AI 프롬프트에 `[RESPOND IN: Korean]` 지시어를 강제하여 안정적인 한국어 출력을 보장합니다.
 - **Zustand 상태 관리:** 거대하고 복잡했던 React `useState` 구조를 깔끔하고 영구적인 **Zustand** 스토어로 마이그레이션했습니다.
 - **분리된 AI 훅:** `enrichBlock`이나 `generateGhostNote` 같은 무거운 백그라운드 로직들을 모듈화된 커스텀 훅으로 추출했습니다.
 - **확장 가능한 테마 시스템:** `globals.css`를 CSS 변수와 데이터 속성(예: `[data-theme="soft-rounded"]`) 기반으로 재구성하여 손쉬운 디자인 바리에이션이 가능합니다.
-- **UI/UX 개선:** 입력창에서 `Cmd+Z`, `Cmd+K` 버튼 클릭 상호작용 지원, `#` 기호를 이용한 콘텐츠 타입 자동완성 드롭다운, 디테일한 에러 카드 표시, 그리고 타일 뷰에서 Task 카드 상단 고정 및 부드러운 자동 스크롤 기능을 추가했습니다.
+- **UI/UX 개선:** 테마, 언어, 소개(About) 버튼을 사이드바의 설정(Settings) 패널로 깔끔하게 통합했습니다. 입력창에서 `Cmd+Z`, `Cmd+K` 버튼 클릭 상호작용 지원, `#` 기호를 이용한 콘텐츠 타입 자동완성 드롭다운, 디테일한 에러 카드 표시, 그리고 타일 뷰에서 Task 카드 상단 고정 및 부드러운 자동 스크롤 기능을 추가했습니다.
 - **Inception Mercury API 지원:** InceptionLabs의 Mercury API를 기본 지원합니다. Mercury는 기존의 순차적(Autoregressive) 방식이 아닌 디퓨전(Diffusion) 기반의 아키텍처를 사용하여 토큰을 병렬로 생성합니다. 이로 인해 초당 1,000토큰 이상의 압도적인 속도를 보여주며, 지연 시간이 없는 실시간 AI 워크플로우에 완벽하게 적합합니다. 또한 카드 등록 없이 넉넉한 량의 무료 토큰(10M)을 제공합니다.
 - **버그 수정:** 한글 타이핑 중 엔터키 입력 시 글자가 중복되는 IME 버그와 서브태스크 중복 생성 문제를 해결했습니다.
 - **AI 에이전트 최적화:** 향후 AI 코딩 어시스턴트(Cursor 등)를 위한 아키텍처 가이드라인이 담긴 `.cursorrules` 파일을 포함하고 있습니다.
